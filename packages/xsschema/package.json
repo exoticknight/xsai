@@ -68,7 +68,7 @@
     "@valibot/to-json-schema": "catalog:",
     "arktype": "^2.0.4",
     "valibot": "catalog:",
-    "zod": "^3.24.2",
+    "zod": "catalog:",
     "zod-to-json-schema": "^3.24.2"
   }
 }
