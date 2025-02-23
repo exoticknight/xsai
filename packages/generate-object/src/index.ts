@@ -19,13 +19,9 @@ export type GenerateObjectResult<T extends Schema, O extends OptionOutput> = Pro
 
 type OptionOutput = 'array' | 'no-schema' | 'object' | undefined
 
-export async function generateObject<
-  T extends Schema,
->(options: GenerateObjectOptions<T>): Promise<GenerateObjectResult<T, 'array'>>
-export async function generateObject<
-  T extends Schema,
-  O extends OptionOutput,
->(options: GenerateObjectOptions<T>): Promise<GenerateObjectResult<T, O>> {
+export async function generateObject<T extends Schema>(options: GenerateObjectOptions<T>): Promise<GenerateObjectResult<T, 'array'>>
+
+export async function generateObject<T extends Schema>(options: GenerateObjectOptions<T>): Promise<GenerateObjectResult<T, GenerateObjectOptions<T>['output']>> {
   const { schema: rawSchema } = options
 
   let wrappedSchema = rawSchema
