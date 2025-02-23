@@ -5,23 +5,20 @@ import { generateText } from '@xsai/generate-text'
 import { toJSONSchema, validate, wrapArray, wrapObject } from 'xsschema'
 
 export interface GenerateObjectOptions<T extends Schema> extends GenerateTextOptions {
-  output?: OptionOutput
   schema: T
   schemaDescription?: string
   schemaName?: string
 }
 
-export type GenerateObjectResult<T extends Schema, O extends OptionOutput> = Promise<
-  GenerateTextResult & {
-    object: O extends 'array' ? Array<Infer<T>> : Infer<T>
-  }
->
+type GenerateResult<O> = GenerateTextResult & { object: O }
 
-type OptionOutput = 'array' | 'no-schema' | 'object' | undefined
+type OptionOutput = 'array' | 'no-schema' | 'object'
 
-export async function generateObject<T extends Schema>(options: GenerateObjectOptions<T>): Promise<GenerateObjectResult<T, 'array'>>
-
-export async function generateObject<T extends Schema>(options: GenerateObjectOptions<T>): Promise<GenerateObjectResult<T, GenerateObjectOptions<T>['output']>> {
+export async function generateObject<T extends Schema>(options: GenerateObjectOptions<T> & { output: 'array' }): Promise<GenerateResult<Array<Infer<T>>>>
+export async function generateObject<T extends Schema>(options: GenerateObjectOptions<T> & { output: 'object' }): Promise<GenerateResult<Infer<T>>>
+export async function generateObject<T extends Schema>(options: GenerateObjectOptions<T> & { output: 'no-schema' }): Promise<GenerateResult<Infer<T>>>
+export async function generateObject<T extends Schema>(options: GenerateObjectOptions<T>): Promise<GenerateResult<Infer<T>>>
+export async function generateObject<T extends Schema>(options: GenerateObjectOptions<T> & { output?: OptionOutput }) {
   const { schema: rawSchema } = options
 
   let wrappedSchema = rawSchema
@@ -49,7 +46,7 @@ export async function generateObject<T extends Schema>(options: GenerateObjectOp
 
   const { finishReason, messages, steps, text, toolCalls, toolResults, usage } = rawRet
 
-  const ret = await validate(wrappedSchema, JSON.parse(text!) as InferIn<T>) as Infer<T>
+  const ret: Infer<T> = await validate(wrappedSchema, JSON.parse(text!) as InferIn<T>)
 
   if (options.output === 'array') {
     return {
