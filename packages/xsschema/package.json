@@ -41,6 +41,8 @@
   "peerDependencies": {
     "@valibot/to-json-schema": "catalog:",
     "arktype": "^2.0.4",
+    "valibot": "catalog:",
+    "zod": "catalog:",
     "zod-to-json-schema": "^3.24.1"
   },
   "peerDependenciesMeta": {
@@ -48,6 +50,12 @@
       "optional": true
     },
     "arktype": {
+      "optional": true
+    },
+    "valibot": {
+      "optional": true
+    },
+    "zod": {
       "optional": true
     },
     "zod-to-json-schema": {
